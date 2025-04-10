@@ -4,6 +4,7 @@ using AdoEfP26.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AdoEfP26.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20250410162909_AddedProducts")]
+    partial class AddedProducts
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,20 +39,6 @@ namespace AdoEfP26.Migrations
                     b.HasKey("ItemId", "ImageUrl");
 
                     b.ToTable("ItemImages");
-
-                    b.HasData(
-                        new
-                        {
-                            ItemId = new Guid("1bedf52f-280a-4dab-a84a-631c13dcdf0b"),
-                            ImageUrl = "office8_2.jpg",
-                            Order = 1
-                        },
-                        new
-                        {
-                            ItemId = new Guid("1bedf52f-280a-4dab-a84a-631c13dcdf0b"),
-                            ImageUrl = "office8_3.jpg",
-                            Order = 1
-                        });
                 });
 
             modelBuilder.Entity("AdoEfP26.Data.Entities.Product", b =>
@@ -92,294 +81,6 @@ namespace AdoEfP26.Migrations
                         .HasFilter("[Slug] IS NOT NULL");
 
                     b.ToTable("Products");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("38cb6817-606e-489c-8381-2b42032cbc22"),
-                            Description = "Скляна куля з новорічною ялинкою",
-                            GroupId = new Guid("0dc4a692-2137-4694-bcb3-684ed826b520"),
-                            ImageUrl = "glass1.png",
-                            Name = "Ялинка",
-                            Price = 250.0m,
-                            Slug = "glass-tree",
-                            Stock = 10
-                        },
-                        new
-                        {
-                            Id = new Guid("c2ccdcca-adbb-43bf-9910-6c24e0fd79c0"),
-                            Description = "Скляна фігура бика з різнокольорового скла",
-                            GroupId = new Guid("0dc4a692-2137-4694-bcb3-684ed826b520"),
-                            ImageUrl = "glass2.jpg",
-                            Name = "Бик",
-                            Price = 350.0m,
-                            Slug = "glass-buffalo",
-                            Stock = 10
-                        },
-                        new
-                        {
-                            Id = new Guid("bd2c7fbb-26ef-4175-8b15-774e560815c6"),
-                            Description = "Скляна куля з образом гелікоптера",
-                            GroupId = new Guid("0dc4a692-2137-4694-bcb3-684ed826b520"),
-                            ImageUrl = "glass3.jpg",
-                            Name = "Гелікоптер",
-                            Price = 249.50m,
-                            Slug = "glass-helicopter",
-                            Stock = 10
-                        },
-                        new
-                        {
-                            Id = new Guid("b253d8eb-c9dc-40a3-97c3-e967da09eada"),
-                            Description = "Маленька фігурка лисиці з кольорового скла",
-                            GroupId = new Guid("0dc4a692-2137-4694-bcb3-684ed826b520"),
-                            ImageUrl = "glass4.jpg",
-                            Name = "Лис",
-                            Price = 150.0m,
-                            Slug = "glass-fox",
-                            Stock = 10
-                        },
-                        new
-                        {
-                            Id = new Guid("bed842bf-8f30-41f2-b4e7-797ccbbff8da"),
-                            Description = "Настільна кругла цукерниця з прозорого скла",
-                            GroupId = new Guid("0dc4a692-2137-4694-bcb3-684ed826b520"),
-                            ImageUrl = "glass5.jpg",
-                            Name = "Цукерниця",
-                            Price = 400.0m,
-                            Stock = 10
-                        },
-                        new
-                        {
-                            Id = new Guid("c9588769-226e-472d-bae5-b7465aa8b98a"),
-                            Description = "Маленька фігурка павича з кольорового скла",
-                            GroupId = new Guid("0dc4a692-2137-4694-bcb3-684ed826b520"),
-                            ImageUrl = "glass6.jpg",
-                            Name = "Павич",
-                            Price = 179.50m,
-                            Stock = 10
-                        },
-                        new
-                        {
-                            Id = new Guid("51bb87d3-ce91-4a07-9f9e-78f8abe02356"),
-                            Description = "Маленька фігурка кота з прозорого скла",
-                            GroupId = new Guid("0dc4a692-2137-4694-bcb3-684ed826b520"),
-                            ImageUrl = "glass7.jpg",
-                            Name = "Кіт",
-                            Price = 220.0m,
-                            Slug = "glass-cat",
-                            Stock = 10
-                        },
-                        new
-                        {
-                            Id = new Guid("c4a7c325-9289-4730-826d-83cc396bd60d"),
-                            Description = "Скляна куля з образом терез в середині",
-                            GroupId = new Guid("0dc4a692-2137-4694-bcb3-684ed826b520"),
-                            ImageUrl = "glass8.jpg",
-                            Name = "Терези",
-                            Price = 270.0m,
-                            Stock = 10
-                        },
-                        new
-                        {
-                            Id = new Guid("8e0f04f7-e614-49d3-be95-c5c48c866043"),
-                            Description = "Склянка для води з прозорого скла",
-                            GroupId = new Guid("0dc4a692-2137-4694-bcb3-684ed826b520"),
-                            Name = "Склянка",
-                            Price = 50.0m,
-                            Stock = 10
-                        },
-                        new
-                        {
-                            Id = new Guid("2c0ef23e-b65e-4353-b991-a52c7d3d029f"),
-                            Description = "Настільна статуетка у формі вершника",
-                            GroupId = new Guid("2444fc1e-5bc5-4a9a-8c69-fab1905a11a2"),
-                            ImageUrl = "office1.jpeg",
-                            Name = "Вершник",
-                            Price = 350.0m,
-                            Slug = "office1",
-                            Stock = 10
-                        },
-                        new
-                        {
-                            Id = new Guid("1da8df6d-b9e3-4ba0-9470-7682b3124717"),
-                            Description = "Настільний декор з маятником Ньютона",
-                            GroupId = new Guid("2444fc1e-5bc5-4a9a-8c69-fab1905a11a2"),
-                            ImageUrl = "office2.jpg",
-                            Name = "Маятник Ньютона",
-                            Price = 450.0m,
-                            Slug = "office2",
-                            Stock = 10
-                        },
-                        new
-                        {
-                            Id = new Guid("aa712e14-856e-4619-a1f9-c7a0b50148de"),
-                            Description = "Настільний декор у формі круглої каруселі",
-                            GroupId = new Guid("2444fc1e-5bc5-4a9a-8c69-fab1905a11a2"),
-                            ImageUrl = "office3.jpg",
-                            Name = "Карусель",
-                            Price = 450.0m,
-                            Stock = 10
-                        },
-                        new
-                        {
-                            Id = new Guid("371fbea0-30fe-4396-a174-4f3e526996aa"),
-                            Description = "Настільний декор з маятником Жордана",
-                            GroupId = new Guid("2444fc1e-5bc5-4a9a-8c69-fab1905a11a2"),
-                            ImageUrl = "office4.jpg",
-                            Name = "Маятник Жордана",
-                            Price = 450.0m,
-                            Stock = 10
-                        },
-                        new
-                        {
-                            Id = new Guid("d9c05b09-62cf-4bfa-ab4c-4082dccfd5e2"),
-                            Description = "Настільний декор у формі корабельного штурвалу",
-                            GroupId = new Guid("2444fc1e-5bc5-4a9a-8c69-fab1905a11a2"),
-                            ImageUrl = "office5.jpeg",
-                            Name = "Штурвал",
-                            Price = 500.0m,
-                            Slug = "office5",
-                            Stock = 10
-                        },
-                        new
-                        {
-                            Id = new Guid("476332f3-de96-4340-8a3d-4d0ffc77a390"),
-                            Description = "Настільний декоративний маятник Жордана",
-                            GroupId = new Guid("2444fc1e-5bc5-4a9a-8c69-fab1905a11a2"),
-                            ImageUrl = "office6.jpg",
-                            Name = "Орбіти",
-                            Price = 400.0m,
-                            Slug = "office6",
-                            Stock = 10
-                        },
-                        new
-                        {
-                            Id = new Guid("144501e6-981c-4871-9505-435fd84861a7"),
-                            Description = "Декоративний прес для паперів з кулями-орбітами",
-                            GroupId = new Guid("2444fc1e-5bc5-4a9a-8c69-fab1905a11a2"),
-                            ImageUrl = "office7.jpg",
-                            Name = "Прес для паперу",
-                            Price = 450.0m,
-                            Slug = "office7",
-                            Stock = 10
-                        },
-                        new
-                        {
-                            Id = new Guid("1bedf52f-280a-4dab-a84a-631c13dcdf0b"),
-                            Description = "Декоративна настільна статуетка у формі золотого бика",
-                            GroupId = new Guid("2444fc1e-5bc5-4a9a-8c69-fab1905a11a2"),
-                            ImageUrl = "office8_1.jpg",
-                            Name = "Золотий бик",
-                            Price = 750.0m,
-                            Slug = "office-bull",
-                            Stock = 10
-                        },
-                        new
-                        {
-                            Id = new Guid("ed186a0a-7470-474e-85e7-efc6eeaf7705"),
-                            Description = "Кам'яний малий глечик з кришкою",
-                            GroupId = new Guid("3ec0edc9-b252-4470-bc1b-f66daea28bce"),
-                            ImageUrl = "stone1.jpg",
-                            Name = "Глечик",
-                            Price = 350.0m,
-                            Slug = "stone1",
-                            Stock = 10
-                        },
-                        new
-                        {
-                            Id = new Guid("e72753eb-b0a1-42fe-a243-e806ae0c1ee8"),
-                            Description = "Кам'яний декоративний виріб у формі груши",
-                            GroupId = new Guid("3ec0edc9-b252-4470-bc1b-f66daea28bce"),
-                            ImageUrl = "stone2.jpg",
-                            Name = "Груша",
-                            Price = 650.0m,
-                            Slug = "stone2",
-                            Stock = 10
-                        },
-                        new
-                        {
-                            Id = new Guid("e6da52ce-fb71-40de-8b5f-4f561b2fc24e"),
-                            Description = "Кам'яна декоративна фігурка у формі сови",
-                            GroupId = new Guid("3ec0edc9-b252-4470-bc1b-f66daea28bce"),
-                            ImageUrl = "stone3.jpg",
-                            Name = "Сова",
-                            Price = 450.0m,
-                            Slug = "stone-owl",
-                            Stock = 10
-                        },
-                        new
-                        {
-                            Id = new Guid("74df6c67-fe0b-43b4-a735-81a59293e1eb"),
-                            Description = "Кам'яна плошка для дрібних речей",
-                            GroupId = new Guid("3ec0edc9-b252-4470-bc1b-f66daea28bce"),
-                            Name = "Плошка",
-                            Price = 250.0m,
-                            Stock = 10
-                        },
-                        new
-                        {
-                            Id = new Guid("c1921a57-bbdc-47a7-889e-d075ecb7ce79"),
-                            Description = "Кам'яна декоративна фігурка у формі слоника",
-                            GroupId = new Guid("3ec0edc9-b252-4470-bc1b-f66daea28bce"),
-                            Name = "Слон",
-                            Price = 350.0m,
-                            Stock = 10
-                        },
-                        new
-                        {
-                            Id = new Guid("87bfc6ba-2227-4e44-97ea-52d20222e23a"),
-                            Description = "Декоративний кошик з різьбленого дерева",
-                            GroupId = new Guid("f3d4aee1-3ee1-4f2e-b244-026bd45207ec"),
-                            ImageUrl = "wood1.jpg",
-                            Name = "Кошик",
-                            Price = 750.0m,
-                            Slug = "wood1",
-                            Stock = 10
-                        },
-                        new
-                        {
-                            Id = new Guid("e3a8c0a9-d5fd-4059-8d3c-e9d91d45906c"),
-                            Description = "Дерев'яна булава з підставкою",
-                            GroupId = new Guid("f3d4aee1-3ee1-4f2e-b244-026bd45207ec"),
-                            ImageUrl = "wood2.jpg",
-                            Name = "Булава",
-                            Price = 950.0m,
-                            Slug = "wood2",
-                            Stock = 10
-                        },
-                        new
-                        {
-                            Id = new Guid("1a268929-778b-4632-a505-b749ac3fac9b"),
-                            Description = "Набір з двох дерев'яних кухолів",
-                            GroupId = new Guid("f3d4aee1-3ee1-4f2e-b244-026bd45207ec"),
-                            ImageUrl = "wood3.jpg",
-                            Name = "Кухоль",
-                            Price = 850.0m,
-                            Slug = "wood3",
-                            Stock = 10
-                        },
-                        new
-                        {
-                            Id = new Guid("6af692a1-991f-4de6-84ad-6f4539a5cde7"),
-                            Description = "Дерев'яна настільна підставка для ручок з черепахою",
-                            GroupId = new Guid("f3d4aee1-3ee1-4f2e-b244-026bd45207ec"),
-                            ImageUrl = "wood4.jpg",
-                            Name = "Черепаха",
-                            Price = 750.0m,
-                            Slug = "wood4",
-                            Stock = 10
-                        },
-                        new
-                        {
-                            Id = new Guid("48f93159-243d-4975-be8f-a68316a391cf"),
-                            Description = "Дерев'яний настільний декор з левами",
-                            GroupId = new Guid("f3d4aee1-3ee1-4f2e-b244-026bd45207ec"),
-                            ImageUrl = "wood5.jpeg",
-                            Name = "Леви",
-                            Price = 900.0m,
-                            Slug = "wood-lions",
-                            Stock = 10
-                        });
                 });
 
             modelBuilder.Entity("AdoEfP26.Data.Entities.ProductGroup", b =>
@@ -417,40 +118,6 @@ namespace AdoEfP26.Migrations
                     b.HasIndex("ParentId");
 
                     b.ToTable("ProductGroups");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("0dc4a692-2137-4694-bcb3-684ed826b520"),
-                            Description = "Декоративні вироби, посуд з кольорового та прозорого скла",
-                            ImageUrl = "glass.jpg",
-                            Name = "Скло",
-                            Slug = "glass"
-                        },
-                        new
-                        {
-                            Id = new Guid("2444fc1e-5bc5-4a9a-8c69-fab1905a11a2"),
-                            Description = "Офісне приладдя та настільні сувеніри",
-                            ImageUrl = "office.jpg",
-                            Name = "Офіс",
-                            Slug = "office"
-                        },
-                        new
-                        {
-                            Id = new Guid("3ec0edc9-b252-4470-bc1b-f66daea28bce"),
-                            Description = "Вироби з природнього та штучного каменю",
-                            ImageUrl = "stone.jpg",
-                            Name = "Камінь",
-                            Slug = "stone"
-                        },
-                        new
-                        {
-                            Id = new Guid("f3d4aee1-3ee1-4f2e-b244-026bd45207ec"),
-                            Description = "Сувеніри та декоративні вироби, а також посуд з деревини",
-                            ImageUrl = "wood.jpg",
-                            Name = "Дерево",
-                            Slug = "wood"
-                        });
                 });
 
             modelBuilder.Entity("AdoEfP26.Data.Entities.User", b =>
