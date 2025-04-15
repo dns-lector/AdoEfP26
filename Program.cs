@@ -3,8 +3,19 @@ using AdoEfP26.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 
 DataContext dataContext = new();
-query5();
-
+String choice;
+do
+{
+    Console.WriteLine("1 - Sign Up");
+    Console.WriteLine("2 - Sign In");
+    Console.WriteLine("0 - Exit");
+    choice = Console.ReadLine()!;
+    switch (choice)
+    {
+        case "1": SignUp(); break;
+        case "2": SignIn(); break;
+    }
+} while (choice != "0");
 
 void query1()
 {
@@ -151,10 +162,94 @@ void query5()
     //));
 }
 
+void SignUp()
+{
+    Console.Write("Enter Name: ");
+    String name = Console.ReadLine()!;
+    Console.Write("Enter Email: ");
+    String email = Console.ReadLine()!;
+    Console.Write("Enter Login: ");
+    String login = Console.ReadLine()!;
+    Console.Write("Enter Password: ");
+    String password = Console.ReadLine()!;
 
-/* Д.З. Скласти EF-запити та вивести результати для наступних задач:
- * - Вивести найстаршого користувача (за віком)
- * - Вивести трьох останніх зареєстрованих користувачів (за датою реєстрації)
- * - Вивести назву ролі -- кількість користувачів, що мають цю роль
- * до звіту додавати скріншоти з результатами
+    // Процедура реєстрації - дві сутноті User, UserAccess
+    // TODO: валідація даних - перевірка за типовими шаблонами
+
+    Guid userId = Guid.NewGuid();
+
+    User user = new() { 
+        Id = userId,
+        Name = name,
+        Email = email,
+        RegisteredAt = DateTime.Now,
+    };
+    String salt = Random.Shared.Next().ToString();
+    UserAccess userAccess = new()
+    {
+        Id = Guid.NewGuid(),
+        UserId = userId,
+        Login = login,
+        Salt = salt,
+        Dk = kdf(password, salt),
+        RoleId = "SelfRegistered"
+    };
+    // додаємо нові об'єкти до контексту
+    dataContext.Users.Add(user);
+    dataContext.UserAccesses.Add(userAccess);
+    // після додавання даних до контексту вони доступні у програмі, але
+    // не передані до БД
+    dataContext.SaveChanges();
+    Console.WriteLine("You are registered");
+}
+
+void SignIn()
+{
+    Console.Write("Enter Login: ");
+    String login = Console.ReadLine()!;
+    Console.Write("Enter Password: ");
+    String password = Console.ReadLine()!;
+
+    // шукаємо у UserAccess, але оскільки пароль "солений", спочатку шукаємо за 
+    // логіном, а потім перевіряємо правильність паролю
+    if (dataContext
+        .UserAccesses
+        .FirstOrDefault(ua => ua.Login == login)
+        is UserAccess userAccess)
+    {
+        // пароль перевіряється шляхом розрахунку DK з солі, що збережена у БД
+        // та паролю, який ввів користувач. Результат розрахунку має збігатись
+        // зі збереженим у БД DK
+        String dk = kdf(password, userAccess.Salt) ;
+        if (dk == userAccess.Dk)
+        {
+            Console.WriteLine("OK");
+            return;
+        }
+    }
+    Console.WriteLine("Access denied");
+}
+
+String kdf(String password, String salt)   // By RFC 2898
+{
+    int c = 3;
+    int dkLen = 20;
+    String t = password + salt;
+    for (int i = 0; i < c; i++)
+    {
+        t = hash(t);
+    }
+    return t[..dkLen]; // t.Substring(0, dkLen);
+}
+
+String hash(String input)
+{
+    return Convert.ToHexString(
+        System.Security.Cryptography.SHA1.HashData(
+            System.Text.Encoding.UTF8.GetBytes(input)
+        ));
+}
+
+/* Д.З. Впровадити механізм реєстрації/автентифікації
+ * з дотриманням вимог стандартів, зокрема RFC 2898
  */
