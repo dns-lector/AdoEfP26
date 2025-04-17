@@ -12,6 +12,7 @@ do
     if(authUser != null)
     {
         Console.WriteLine("3 - Update Info");
+        Console.WriteLine("4 - Delete Info (Forget me)");
     }
     Console.WriteLine("0 - Exit");
     choice = Console.ReadLine()!;
@@ -20,6 +21,7 @@ do
         case "1": SignUp(); break;
         case "2": SignIn(); break;
         case "3": Update(); break;
+        case "4": Delete(); break;
     }
 } while (choice != "0");
 
@@ -171,12 +173,19 @@ void query5()
 
 void SignUp()
 {
+    Console.Write("Enter Login: ");
+    String login;
+    bool isUsed;
+    do {
+        login = Console.ReadLine()!;
+        isUsed = dataContext.UserAccesses.Any(ua => ua.Login == login);
+        if(isUsed) Console.WriteLine("Login in use, updated cancelled");
+    } while (isUsed) ;
+
     Console.Write("Enter Name: ");
     String name = Console.ReadLine()!;
     Console.Write("Enter Email: ");
     String email = Console.ReadLine()!;
-    Console.Write("Enter Login: ");
-    String login = Console.ReadLine()!;
     Console.Write("Enter Password: ");
     String password = Console.ReadLine()!;
 
@@ -222,7 +231,7 @@ void SignIn()
     if (dataContext
         .UserAccesses
         .Include(ua => ua.User)
-        .FirstOrDefault(ua => ua.Login == login)
+        .FirstOrDefault(ua => ua.Login == login && ua.User.DeletedAt == null)
         is UserAccess userAccess)
     {
         // пароль перевіряється шляхом розрахунку DK з солі, що збережена у БД
@@ -255,6 +264,14 @@ void Update()
     Console.Write("New Password: ");
     String password = Console.ReadLine()!;
     // -----------------------------------
+    if (!String.IsNullOrEmpty(login))   // перевіряємо чи доступний новий логін
+    {
+        if(dataContext.UserAccesses.Any(ua => ua.Login == login))
+        {
+            Console.WriteLine("Login in use, updated cancelled");
+            return;
+        }
+    }
     // вважатимемо, що відсутність даних - відсутність змін
     if ( ! String.IsNullOrEmpty(name))
     {                                                 // EF при виконанні запитів
@@ -274,6 +291,25 @@ void Update()
     }
     dataContext.SaveChanges();
     Console.WriteLine("Info Updated");
+}
+
+void Delete()
+{
+    if(authUser == null) return;
+
+    Console.Write("Sure?");
+    if ("y" != Console.ReadLine()) return;
+
+    // згідно з Art. 17 GDPR персональні дані МАЮТЬ бути видалені
+    // однак, дані іншого типу видаляти немає обов'язку
+    authUser.User.Name = "";
+    authUser.User.Email = "";
+    authUser.User.Birthdate = null;
+    authUser.User.DeletedAt = DateTime.Now;
+    authUser = null;
+    dataContext.SaveChanges();
+    Console.WriteLine("Deleted");
+
 }
 
 String kdf(String password, String salt)   // By RFC 2898
@@ -296,8 +332,10 @@ String hash(String input)
         ));
 }
 
-/* Д.З. Впровадити механізм реєстрації/автентифікації
- * з дотриманням вимог стандартів, зокрема RFC 2898
+/* Д.З. Впровадити функціональність редагування та видалення 
+ * персональних даних користувача
+ * з дотриманням вимог стандартів, зокрема Art. 17 GDPR
+ * (https://gdpr-info.eu/art-17-gdpr/)
  * 
  * Parent{method}
  * Child:Parent{Override method}
