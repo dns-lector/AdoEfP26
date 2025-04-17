@@ -3,17 +3,23 @@ using AdoEfP26.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 
 DataContext dataContext = new();
+UserAccess? authUser = null; 
 String choice;
 do
 {
     Console.WriteLine("1 - Sign Up");
     Console.WriteLine("2 - Sign In");
+    if(authUser != null)
+    {
+        Console.WriteLine("3 - Update Info");
+    }
     Console.WriteLine("0 - Exit");
     choice = Console.ReadLine()!;
     switch (choice)
     {
         case "1": SignUp(); break;
         case "2": SignIn(); break;
+        case "3": Update(); break;
     }
 } while (choice != "0");
 
@@ -135,7 +141,8 @@ void query5()
 
     // 3. EF Navigation props
     var q = dataContext
-        .Users
+        .Users            // Якщо результат запиту потрібен тільки для "читання"
+        .AsNoTracking()   // можна відключити автоматичний Tracking - стеження за змінами
         .Include(u => u.UserAccesses)            // JOIN UserAccesses UA on U.id = UA.UserId
         .ThenInclude(ua => ua.UserRole)          // JOIN UserRoles UR on UA.RoleId = UR.Id
         .Where(u => u.UserAccesses.Any(ua => ua.UserRole.CanUpdate))
@@ -214,6 +221,7 @@ void SignIn()
     // логіном, а потім перевіряємо правильність паролю
     if (dataContext
         .UserAccesses
+        .Include(ua => ua.User)
         .FirstOrDefault(ua => ua.Login == login)
         is UserAccess userAccess)
     {
@@ -224,10 +232,48 @@ void SignIn()
         if (dk == userAccess.Dk)
         {
             Console.WriteLine("OK");
+            authUser = userAccess;
             return;
         }
     }
     Console.WriteLine("Access denied");
+}
+
+void Update()
+{
+    if (authUser == null) return;
+    Console.WriteLine("Current Info:");
+    Console.WriteLine($"Name: {authUser.User.Name}");     // Інтерполяція
+    Console.WriteLine("Email: " + authUser.User.Email);   // Конкатенація
+    Console.WriteLine($"Login: {authUser.Login}");
+    Console.Write("New Name: ");
+    String name = Console.ReadLine()!;
+    Console.Write("New Email: ");
+    String email = Console.ReadLine()!;
+    Console.Write("New Login: ");
+    String login = Console.ReadLine()!;
+    Console.Write("New Password: ");
+    String password = Console.ReadLine()!;
+    // -----------------------------------
+    // вважатимемо, що відсутність даних - відсутність змін
+    if ( ! String.IsNullOrEmpty(name))
+    {                                                 // EF при виконанні запитів
+        authUser.User.Name = name;                    // з контексту автоматично
+    }                                                 // включає спостереження
+    if ( ! String.IsNullOrEmpty(email))               // за змінами (Tracking), яке
+    {                                                 // відстежує додавання, 
+        authUser.User.Email = email;                  // вилучення, а також зміни
+    }                                                 // контенту даних з DbSet
+    if ( ! String.IsNullOrEmpty(login))               // 
+    {                                                 // Довільні зміни в об'єктах,
+        authUser.Login = login;                       // що є результатами запитів
+    }                                                 // переносяться до БД
+    if ( ! String.IsNullOrEmpty(password))            // після їх фіксації 
+    {                                                 // dataContext.SaveChanges()
+        authUser.Dk = kdf(password, authUser.Salt);   // 
+    }
+    dataContext.SaveChanges();
+    Console.WriteLine("Info Updated");
 }
 
 String kdf(String password, String salt)   // By RFC 2898
@@ -252,4 +298,10 @@ String hash(String input)
 
 /* Д.З. Впровадити механізм реєстрації/автентифікації
  * з дотриманням вимог стандартів, зокрема RFC 2898
+ * 
+ * Parent{method}
+ * Child:Parent{Override method}
+ * 
+ * Parent obj = new Child()
+ * obj.method()
  */
